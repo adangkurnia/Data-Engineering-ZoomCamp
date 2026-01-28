@@ -59,7 +59,8 @@
     
     8007
     
-    ![image.png](attachment:65409bc3-b633-42d2-bb19-1e63d4fa553f:image.png)
+    <img width="157" height="82" alt="image" src="https://github.com/user-attachments/assets/3af50a45-feac-4b83-8763-ce76ffcf3486" />
+
     
 4. Question 4. Which was the pick up day with the longest trip distance? Only consider trips with trip_distance less than 100 miles. (1 point)
     
@@ -88,7 +89,8 @@
     
     2025-11-14
     
-    ![image.png](attachment:dae2f6d8-7076-4e91-afa6-a91534724eb6:image.png)
+    <img width="189" height="82" alt="image" src="https://github.com/user-attachments/assets/256dc5e5-a5de-4554-ab48-0472f5f21880" />
+
     
 5. Question 5. Which was the pickup zone with the largest total_amount (sum of all trips) on November 18th, 2025? (1 point)
     
@@ -110,7 +112,8 @@
     
     East Harlem North
     
-    ![image.png](attachment:f279b59b-d239-4847-81ed-e617ea472179:image.png)
+    <img width="287" height="86" alt="image" src="https://github.com/user-attachments/assets/fdffdcba-b2a5-4d2b-a406-53a014f7c182" />
+
     
 6. Question 6. For the passengers picked up in the zone named "East Harlem North" in November 2025, which was the drop off zone that had the largest tip? (1 point)
     
@@ -132,13 +135,11 @@
     
     Yorkville West
     
-    ![image.png](attachment:b4ad1ec2-0d2a-4192-b66a-6d7359b5798f:image.png)
+    <img width="291" height="86" alt="image" src="https://github.com/user-attachments/assets/62ce5cbb-84c3-4f8f-9b76-24c6b727429e" />
+
     
 7. Question 7. Which of the following sequences describes the Terraform workflow for: 1) Downloading plugins and setting up backend, 2) Generating and executing changes, 3) Removing all resources? (1 point)
     
-    <aside>
-    💡
-    
+    ```sql
     terraform init, terraform apply -auto-approve, terraform destroy
-    
-    </aside>
+    ```
