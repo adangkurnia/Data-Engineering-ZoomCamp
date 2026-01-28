@@ -57,6 +57,8 @@
     
     Output:
     
+    8007
+    
     ![image.png](attachment:65409bc3-b633-42d2-bb19-1e63d4fa553f:image.png)
     
 4. Question 4. Which was the pick up day with the longest trip distance? Only consider trips with trip_distance less than 100 miles. (1 point)
@@ -84,6 +86,8 @@
     
     Output:
     
+    2025-11-14
+    
     ![image.png](attachment:dae2f6d8-7076-4e91-afa6-a91534724eb6:image.png)
     
 5. Question 5. Which was the pickup zone with the largest total_amount (sum of all trips) on November 18th, 2025? (1 point)
@@ -103,6 +107,8 @@
     ```
     
     Output:
+    
+    East Harlem North
     
     ![image.png](attachment:f279b59b-d239-4847-81ed-e617ea472179:image.png)
     
@@ -124,6 +130,15 @@
     
     Output:
     
+    Yorkville West
+    
     ![image.png](attachment:b4ad1ec2-0d2a-4192-b66a-6d7359b5798f:image.png)
     
 7. Question 7. Which of the following sequences describes the Terraform workflow for: 1) Downloading plugins and setting up backend, 2) Generating and executing changes, 3) Removing all resources? (1 point)
+    
+    <aside>
+    💡
+    
+    terraform init, terraform apply -auto-approve, terraform destroy
+    
+    </aside>
