@@ -65,17 +65,6 @@
 4. Question 4. Which was the pick up day with the longest trip distance? Only consider trips with trip_distance less than 100 miles. (1 point)
     
     ```sql
-    select * from public.green_taxi_data limit 5;
-    
-    SELECT COUNT(TRIP_DISTANCE) AS TOTAL_TRIPS
-    FROM PUBLIC.GREEN_TAXI_DATA
-    WHERE TRIP_DISTANCE <= 1
-    AND lpep_pickup_datetime  
-    	BETWEEN 
-    		CAST('2025-11-01' AS DATE) 
-    	AND 
-    		CAST('2025-12-01' AS DATE);
-    
     SELECT 
     	CAST(lpep_pickup_datetime AS DATE ) AS day
     FROM public.green_taxi_data
@@ -143,3 +132,4 @@
     ```sql
     terraform init, terraform apply -auto-approve, terraform destroy
     ```
+
