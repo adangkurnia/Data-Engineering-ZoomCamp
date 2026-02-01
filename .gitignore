@@ -1,6 +1,7 @@
 *.parquet
 *.txt
 .env_encoded
+*.json
 
 # Byte-compiled / optimized / DLL files
 __pycache__/
