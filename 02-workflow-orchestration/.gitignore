@@ -1,2 +1,2 @@
 .env_encoded
-*.json
+service-account.json

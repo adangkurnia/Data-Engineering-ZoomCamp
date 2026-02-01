@@ -2,7 +2,7 @@
 *.txt
 .env_encoded
 *.json
-
+service-account.json
 # Byte-compiled / optimized / DLL files
 __pycache__/
 *.py[codz]
