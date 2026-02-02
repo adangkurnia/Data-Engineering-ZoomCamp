@@ -41,7 +41,7 @@
     **Answer: 1,925,152**
     
     ```sql
-    SELECT COUNT(*) 
+    SELECT SUM(row_count) AS total_row_count
     FROM `project-1a58d016-57b1-4ae2-b06.zoomcamp.yellow_tripdata_2021_03`
     ```
     
