@@ -1,6 +1,6 @@
 1. Within the execution for `Yellow` Taxi data for the year `2020` and month `12`: what is the uncompressed file size (i.e. the output file `yellow_tripdata_2020-12.csv` of the `extract` task)?
     
-    **Answer: 134.5 MB**
+    **Answer: $\frac{134,500,000\text{ bytes}}{1,048,576} \approx 128.3\text{ MiB}$**
     
     <img width="480" height="34" alt="image" src="https://github.com/user-attachments/assets/c9dbf4d7-f9d8-418e-bae4-b4744437d2d7" />
 
