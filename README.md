@@ -1,9 +1,9 @@
-**Data Engineering Zoomcamp 2026**
+## **Data Engineering Zoomcamp 2026**
 
 This repo contains homework and exercises for the Data Engineering Zoomcamp 2026.
 ![zoomcamp_architecture](images/zoomcamp_architecture.png)
 
-**Official Resources**
+## **Official Resources**
 
 - Course repository:
     
