@@ -5,7 +5,6 @@ variable "credentials" {
   #saved there as my-creds.json you could use default = "./keys/my-creds.json"
 }
 
-
 variable "project" {
   description = "Project"
   default     = "project-1a58d016-57b1-4ae2-b06"
