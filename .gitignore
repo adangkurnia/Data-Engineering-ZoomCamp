@@ -1,5 +1,6 @@
 *.parquet
 *.txt
+*.csv.gz
 
 .env_encoded
 *.json
