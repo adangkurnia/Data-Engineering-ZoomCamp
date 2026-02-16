@@ -31,46 +31,35 @@ def create_bucket_if_not_exists(bucket_name):
         sys.exit(1)
 
 def process_file(args):
-    """Sequence: Download -> Convert to Parquet -> Upload -> Delete Local"""
+    """Sequence: Download -> Upload -> Delete Local"""
     t, y, m = args
     
-    # Define file names
+    # Define file name
     csv_file = f"{t}_tripdata_{y}-{m}.csv.gz"
-    parquet_file = csv_file.replace(".csv.gz", ".parquet")
     
     # Define paths
     url = f"{BASE_URL}{t}/{csv_file}"
     local_csv_path = os.path.join(DOWNLOAD_DIR, csv_file)
-    local_parquet_path = os.path.join(DOWNLOAD_DIR, parquet_file)
 
     try:
         # 1. Download
         print(f"Downloading {csv_file}...")
         urllib.request.urlretrieve(url, local_csv_path)
 
-        # 2. Convert CSV to Parquet
-        print(f"Converting {csv_file} to Parquet...")
-        df = pd.read_csv(local_csv_path, compression='gzip', low_memory=False)
-        
-        # Optional: Cast data types here if you encounter schema issues in BigQuery
-        df.to_parquet(local_parquet_path, engine='pyarrow')
+        # 2. Upload .csv.gz to GCS
+        print(f"Uploading {csv_file} to GCS...")
+        blob = bucket.blob(f"{t}/{csv_file}") 
+        blob.upload_from_filename(local_csv_path)
 
-        # 3. Upload Parquet to GCS
-        print(f"Uploading {parquet_file} to GCS...")
-        blob = bucket.blob(f"{t}/{parquet_file}") # Uploading into type-specific folders in GCS
-        blob.upload_from_filename(local_parquet_path)
-
-        # 4. Cleanup
+        # 3. Cleanup
         os.remove(local_csv_path)
-        os.remove(local_parquet_path)
-        print(f"Successfully processed and cleaned up: {parquet_file}")
+        print(f"Successfully processed and cleaned up: {csv_file}")
 
     except Exception as e:
         print(f"Error processing {csv_file}: {e}")
-        # Cleanup if files exist despite error
-        for f in [local_csv_path, local_parquet_path]:
-            if os.path.exists(f):
-                os.remove(f)
+        # Cleanup if file exists despite error
+        if os.path.exists(local_csv_path):
+            os.remove(local_csv_path)
 
 if __name__ == "__main__":
     # Ensure local directory exists
@@ -82,8 +71,7 @@ if __name__ == "__main__":
     # Prepare combinations
     tasks = [(t, y, m) for t in TYPES for y in YEARS for m in MONTHS]
 
-    # Use ThreadPoolExecutor for concurrent processing
-    # Note: max_workers=4 is safe; if you have high RAM, you can increase this.
+    # Concurrent processing
     with ThreadPoolExecutor(max_workers=4) as executor:
         executor.map(process_file, tasks)
 
