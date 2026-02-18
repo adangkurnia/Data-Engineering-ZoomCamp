@@ -1,71 +1,55 @@
-"""Template for building a `dlt` pipeline to ingest data from a REST API."""
+"""Pipeline to ingest data from the Open Library Search API."""
 
 import dlt
-from dlt.sources.rest_api import rest_api_resources
-from dlt.sources.rest_api.typing import RESTAPIConfig
+from dlt.sources.rest_api import rest_api_source
 
 
-@dlt.source
-def open_library_rest_api_source():
-    """Define dlt resources from REST API endpoints."""
-    config: RESTAPIConfig = {
+def open_library_source(query: str = "harry potter"):
+    """
+    Create a dlt source for the Open Library Search API.
+    
+    Args:
+        query: Search query string (default: "harry potter")
+    """
+    return rest_api_source({
         "client": {
-            "base_url": "https://openlibrary.org/",
+            "base_url": "https://openlibrary.org",
+        },
+        "resource_defaults": {
+            "primary_key": "key",
+            "write_disposition": "replace",
         },
         "resources": [
             {
-                "name": "harry_potter_books",
+                "name": "books",
                 "endpoint": {
                     "path": "search.json",
                     "params": {
-                        "q": "harry potter",
+                        "q": query,
                         "limit": 100,
-                        # Open Library Search API defaults to a restricted field set.
-                        # Request explicit fields to make the output predictable.
-                        "fields": ",".join(
-                            [
-                                "key",
-                                "title",
-                                "author_name",
-                                "first_publish_year",
-                                "edition_count",
-                                "isbn",
-                                "cover_i",
-                                "language",
-                                "subject",
-                            ]
-                        ),
                     },
                     "data_selector": "docs",
                     "paginator": {
-                        "type": "page_number",
-                        "base_page": 1,
-                        "page_param": "page",
-                        # Open Library provides `numFound` (total hits), not total pages.
-                        # Let pagination stop after an empty page.
-                        "total_path": None,
+                        "type": "offset",
+                        "limit": 100,
+                        "offset_param": "offset",
+                        "limit_param": "limit",
+                        "total_path": "numFound",
                     },
                 },
-            }
+            },
         ],
-        # set `resource_defaults` to apply configuration to all endpoints
-    }
-
-    yield from rest_api_resources(config)
-
-
-pipeline = dlt.pipeline(
-    pipeline_name='open_library_pipeline',
-    destination='duckdb',
-    # `refresh="drop_sources"` ensures the data and the state is cleaned
-    # on each `pipeline.run()`; remove the argument once you have a
-    # working pipeline.
-    refresh="drop_sources",
-    # show basic progress of resources extracted, normalized files and load-jobs on stdout
-    progress="log",
-)
+    })
 
 
 if __name__ == "__main__":
-    load_info = pipeline.run(open_library_rest_api_source())
-    print(load_info)  # noqa: T201
+    pipeline = dlt.pipeline(
+        pipeline_name="open_library_pipeline",
+        destination="duckdb",
+        dataset_name="open_library_data",
+        progress="log",
+    )
+
+    # Load Harry Potter books from Open Library
+    load_info = pipeline.run(open_library_source(query="harry potter"))
+    print(load_info)
