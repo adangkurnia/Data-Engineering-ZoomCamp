@@ -1,82 +1,47 @@
-import marimo as mo
+import marimo
 
 __generated_with = "0.19.11"
-app = mo.App()
+app = marimo.App()
 
 
 @app.cell
 def _():
     import ibis
 
-    # DuckDB file created by taxi_pipeline
     con = ibis.duckdb.connect("taxi_pipeline.duckdb")
-
-    # Fully qualified table name; adjust if different
-    TABLE = "nyc_taxi_data.ny_taxi_trips"
-
-    return con, TABLE
+    t = con.table("ny_taxi_trips", database="nyc_taxi_data")
+    return (t,)
 
 
 @app.cell
-def _(con, TABLE):
-    import marimo as mo
-
-    # 1. Start and end date of the dataset (SQL)
-    start_end = mo.sql(
-        f"""
-        SELECT
-          MIN(trip_pickup_date_time) AS start_date,
-          MAX(trip_dropoff_date_time) AS end_date
-        FROM {TABLE}
-        """,
-        conn=con.con,
+def _(t):
+    # 1. Start and end date of the dataset
+    start_end = t.aggregate(
+        start_date=t.trip_pickup_date_time.min(),
+        end_date=t.trip_dropoff_date_time.max(),
     )
     start_end
+    return
 
 
 @app.cell
-def _(con, TABLE):
-    import marimo as mo
-
-    # 2. Proportion of trips paid with credit card (SQL)
-    credit_prop = mo.sql(
-        f"""
-        WITH counts AS (
-          SELECT
-            payment_type,
-            COUNT(*) AS n
-          FROM {TABLE}
-          GROUP BY payment_type
-        ),
-        totals AS (
-          SELECT
-            SUM(n) AS total_trips,
-            SUM(CASE WHEN payment_type = 'Credit' THEN n ELSE 0 END) AS credit_trips
-          FROM counts
-        )
-        SELECT
-          credit_trips * 1.0 / total_trips AS credit_card_proportion
-        FROM totals
-        """,
-        conn=con.con,
-    )
-    credit_prop
+def _(t):
+    # 2. Proportion of trips paid with credit card
+    counts = t.group_by(t.payment_type).aggregate(n=t.count())
+    counts_df = counts.execute()
+    credit_trips = counts_df.loc[counts_df["payment_type"] == "Credit", "n"].sum()
+    total_trips = counts_df["n"].sum()
+    credit_proportion = f"{(credit_trips / total_trips)*100}%" if total_trips else 0.0
+    credit_proportion
+    return 
 
 
 @app.cell
-def _(con, TABLE):
-    import marimo as mo
-
-    # 3. Total amount of money generated in tips (SQL)
-    tips_total = mo.sql(
-        f"""
-        SELECT
-          SUM(tip_amt) AS total_tips
-        FROM {TABLE}
-        """,
-        conn=con.con,
-    )
+def _(t):
+    # 3. Total amount of money generated in tips
+    tips_total = t.tip_amt.sum().round(2).execute()
     tips_total
+    return
 
 
 if __name__ == "__main__":
