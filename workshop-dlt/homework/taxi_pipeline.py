@@ -42,8 +42,8 @@ def taxi_rest_api_source(
                         "params": params,
                         "paginator": {
                             "type": "page_number",
-                            "page_param": "page",
-                            "start_page": 1,
+                            "param_name": "page",
+                            "initial_value": 1,
                         },
                     },
                 },
