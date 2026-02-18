@@ -2,12 +2,14 @@
 
 import dlt
 from dlt.sources.rest_api import rest_api_source
+from dlt.sources.helpers.rest_client.paginators import PageNumberPaginator
 
 
 def taxi_rest_api_source(
     year: int | None = None,
     month: int | None = None,
     dataset: str = "ny_taxi",
+    max_pages: int | None = None,
 ):
     """
     Build a dlt REST API source for the NYC taxi API.
@@ -26,12 +28,21 @@ def taxi_rest_api_source(
     if month is not None:
         params["month"] = month
 
+    # The API returns JSON arrays and uses `page` starting at 1.
+    paginator = PageNumberPaginator(
+        base_page=1,
+        page=1,
+        page_param="page",
+        total_path=None,
+        maximum_page=max_pages,
+        stop_after_empty_page=True,
+    )
+
     return rest_api_source(
         {
             "client": {
                 "base_url": "https://us-central1-dlthub-analytics.cloudfunctions.net/data_engineering_zoomcamp_api",  # noqa: E501
-                # Use built-in page-number paginator with default settings
-                "paginator": "page_number",
+                "paginator": paginator,
             },
             "resource_defaults": {
                 "write_disposition": "append",
