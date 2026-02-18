@@ -5,8 +5,8 @@ from dlt.sources.rest_api import rest_api_source
 
 
 def taxi_rest_api_source(
-    year: int = 2019,
-    month: int = 1,
+    year: int | None = None,
+    month: int | None = None,
     dataset: str = "ny_taxi",
 ):
     """
@@ -17,6 +17,15 @@ def taxi_rest_api_source(
     - Returns paginated JSON with up to 1,000 records per page
     - Uses page-based pagination and returns an empty list when there is no more data
     """
+    params: dict[str, object] = {
+        "dataset": dataset,
+        # `page` is controlled by the paginator configuration below
+    }
+    if year is not None:
+        params["year"] = year
+    if month is not None:
+        params["month"] = month
+
     return rest_api_source(
         {
             "client": {
@@ -29,15 +38,8 @@ def taxi_rest_api_source(
                 {
                     "name": "ny_taxi_trips",
                     "endpoint": {
-                        # root path, all configuration is passed via query params
                         "path": "",
-                        "params": {
-                            "dataset": dataset,
-                            "year": year,
-                            "month": month,
-                            # `page` is controlled by the paginator below
-                        },
-                        # page-based pagination, stops automatically when an empty page is returned
+                        "params": params,
                         "paginator": {
                             "type": "page_number",
                             "page_param": "page",
@@ -59,5 +61,6 @@ taxi_pipeline = dlt.pipeline(
 
 
 if __name__ == "__main__":
-    load_info = taxi_pipeline.run(taxi_rest_api_source(year=2019, month=1))
+    # By default, loads all available data for the dataset.
+    load_info = taxi_pipeline.run(taxi_rest_api_source())
     print(load_info)  # noqa: T201
