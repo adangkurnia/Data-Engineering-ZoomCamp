@@ -30,12 +30,8 @@ def taxi_rest_api_source(
         {
             "client": {
                 "base_url": "https://us-central1-dlthub-analytics.cloudfunctions.net/data_engineering_zoomcamp_api",  # noqa: E501
-                # Global page-number paginator; stops when an empty page is returned
-                "paginator": {
-                    "type": "page_number",
-                    "param_name": "page",
-                    "initial_value": 1,
-                },
+                # Use built-in page-number paginator with default settings
+                "paginator": "page_number",
             },
             "resource_defaults": {
                 "write_disposition": "append",
