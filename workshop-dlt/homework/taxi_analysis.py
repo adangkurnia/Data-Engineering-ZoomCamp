@@ -1,7 +1,7 @@
-import marimo as mo
+import marimo
 
-
-app = mo.App()
+__generated_with = "0.19.11"
+app = marimo.App()
 
 
 @app.cell
@@ -9,8 +9,8 @@ def _():
     import ibis
 
     con = ibis.duckdb.connect("taxi_pipeline.duckdb")
-    t = con.table("nyc_taxi_data__ny_taxi_trips")
-    return con, t
+    t = con.table("nyc_taxi_data.ny_taxi_trips")
+    return (t,)
 
 
 @app.cell
@@ -21,6 +21,7 @@ def _(t):
         end_date=t.Trip_Dropoff_DateTime.max(),
     )
     start_end
+    return
 
 
 @app.cell
@@ -32,6 +33,7 @@ def _(t):
     total_trips = counts_df["n"].sum()
     credit_proportion = credit_trips / total_trips if total_trips else 0.0
     credit_proportion
+    return
 
 
 @app.cell
@@ -39,6 +41,7 @@ def _(t):
     # 3. Total amount of money generated in tips
     tips_total = t.Tip_Amt.sum().execute()
     tips_total
+    return
 
 
 if __name__ == "__main__":
