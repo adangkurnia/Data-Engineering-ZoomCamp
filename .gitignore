@@ -1,6 +1,8 @@
 *.parquet
 *.txt
+*.csv
 *.csv.gz
+
 
 
 # Ignore DuckDB databases
@@ -223,4 +225,4 @@ __marimo__/
 logs/runs
 logs/*.log
 *.py[cod]
-logs/queries05-data-platforms/duckdb.db
+logs/queries05-data-platforms/duckdb.db*.csv
